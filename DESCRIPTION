@@ -15,3 +15,5 @@ Imports:
     data.table,
     lubridate
 Suggests: tinytest
+URL: https://github.com/johnmackintosh/juncture
+BugReports: https://github.com/johnmackintosh/juncture/issues
