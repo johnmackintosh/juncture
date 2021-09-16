@@ -2,6 +2,11 @@
 
 export(juncture)
 import(data.table)
+importFrom(checkmate,assert_choice)
+importFrom(checkmate,check_character)
+importFrom(checkmate,check_data_frame)
+importFrom(checkmate,check_posixct)
+importFrom(checkmate,check_vector)
 importFrom(lubridate,ceiling_date)
 importFrom(lubridate,date)
 importFrom(lubridate,floor_date)

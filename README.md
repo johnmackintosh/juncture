@@ -4,6 +4,8 @@
 # juncture
 
 <!-- badges: start -->
+
+[![R-CMD-check](https://github.com/johnmackintosh/juncture/workflows/R-CMD-check/badge.svg)](https://github.com/johnmackintosh/juncture/actions)
 <!-- badges: end -->
 
 The goal of juncture is to …

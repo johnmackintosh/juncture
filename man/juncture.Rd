@@ -81,13 +81,13 @@ grand totals, grouped totals, or individual resources level per interval.
 }
 \examples{
 \donttest{
-interval_census(beds, identifier ="patient", time_in = "start_time",
+juncture(beds, identifier ="patient", time_in = "start_time",
 time_out = "end_time", time_unit = "1 hour", results = "total")
 
-interval_census(beds, identifier ="patient", time_in = "start_time",
+juncture(beds, identifier ="patient", time_in = "start_time",
 time_out = "end_time", time_unit = "1 hour", results = "individual")
 
-interval_census(beds, identifier ="patient", time_in = "start_time",
+juncture(beds, identifier ="patient", time_in = "start_time",
 time_out = "end_time", group_var = "bed",
 time_unit = "1 hour", results = "group", uniques = FALSE)
 

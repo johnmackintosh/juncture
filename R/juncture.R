@@ -58,17 +58,19 @@
 #' @importFrom lubridate floor_date ceiling_date seconds minutes date force_tz
 #' @importFrom lubridate ymd_hms
 #' @importFrom utils head tail
+#' @importFrom checkmate check_data_frame assert_choice check_character
+#' check_vector check_posixct
 #' @export
 #'
 #' @examples
 #' \donttest{
-#'interval_census(beds, identifier ="patient", time_in = "start_time",
+#'juncture(beds, identifier ="patient", time_in = "start_time",
 #'time_out = "end_time", time_unit = "1 hour", results = "total")
 #'
-#'interval_census(beds, identifier ="patient", time_in = "start_time",
+#'juncture(beds, identifier ="patient", time_in = "start_time",
 #'time_out = "end_time", time_unit = "1 hour", results = "individual")
 #'
-#'interval_census(beds, identifier ="patient", time_in = "start_time",
+#'juncture(beds, identifier ="patient", time_in = "start_time",
 #'time_out = "end_time", group_var = "bed",
 #'time_unit = "1 hour", results = "group", uniques = FALSE)
 #'
@@ -96,26 +98,11 @@ juncture <- function(df,
 
 
   check_data_frame(df, null.ok = FALSE)
-
-
-  if (missing(identifier)) {
-    stop("Please provide a value for the resources identifier")
-  }
-
-  if (missing(time_in)) {
-    stop("Please provide a value for time_in")
-  }
-
-  if (missing(time_out)) {
-    stop("Please provide a value for time_out")
-  }
-
-  if (length(results) > 1)  {
-    stop('"Too many values passed to "results" argument.
-         Please set results to one of "individual", "group", or "total"',
-         call. = FALSE)
-  }
-
+  check_vector(identifier, null.ok =  FALSE)
+  check_posixct(time_in, null.ok =  FALSE)
+  check_posixct(time_out, null.ok =  FALSE)
+  check_character(group_var, null.ok = TRUE)
+  assert_choice(results, choices = c("individual", "group","total"))
 
   if (results == "group" & missing(group_var)) {
     stop("Please provide a value for the group_var column")
@@ -126,9 +113,9 @@ juncture <- function(df,
          Do you mean "group"?"', call. = FALSE)
   }
 
-
   if (results == "group" & uniques) {
-    stop("At group level, please change uniques to FALSE for accurate counts")
+    uniques <- FALSE
+    message("Results requested at group level, so changing uniques to FALSE for accurate counts")
   }
 
 
@@ -148,19 +135,6 @@ juncture <- function(df,
 
   pat_DT <- copy(df)
   setDT(pat_DT)
-
-
-  is.POSIXct <- function(x)
-    inherits(x, "POSIXct")
-
-  if (pat_DT[, !is.POSIXct(get(time_in))]) {
-    stop("The time_in column must be POSIXct")
-  }
-
-  if (pat_DT[, !is.POSIXct(get(time_out))]) {
-    stop("The time_out column must be POSIXct")
-  }
-
 
   .confounding <- pat_DT[get(time_in) == get(time_out),.N]
   if (.confounding > 0) {
@@ -286,7 +260,7 @@ juncture <- function(df,
 
   pat_res <- if (uniques) {
     unique(pat_res, by = c(identifier, "interval_beginning"))
-  }else {
+  } else {
     pat_res
   }
 

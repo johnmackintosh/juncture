@@ -58,46 +58,31 @@ expect_error(juncture(df = beds,
                               uniques = TRUE))
 
 
-#
-#
-#
-# # missing time_in
-#
-# test_that(" missing time_in argument throws error", {
-#
-#   # missingtime_in
-#
-#
-#   expect_that(juncture(beds,
-#                               identifier = "patient",
-#                               time_out = "end_time",
-#                               group_var = "bed",
-#                               time_unit = "1 hour",
-#                               results =  "total",
-#                               uniques = TRUE),
-#               throws_error())
-#
-#
-# })
-#
-#
-# test_that(" missing time_out argument throws error", {
-#
-#   # missing time_out
-#
-#
-#   expect_that(juncture(beds,
-#                               identifier = "patient",
-#                              time_in = "start_time",
-#                               group_var = "bed",
-#                               time_unit = "1 hour",
-#                               results =  "total",
-#                               uniques = TRUE),
-#               throws_error())
-#
-#
-# })
-#
+
+
+
+# missing time_in
+
+  expect_error(juncture(beds,
+                        identifier = "patient",
+                        time_out = "end_time",
+                        group_var = "bed",
+                        time_unit = "1 hour",
+                        results =  "total",
+                        uniques = TRUE))
+
+
+
+  # missing time_out
+
+
+  expect_error(juncture(beds,
+                        identifier = "patient",
+                        time_in = "start_time",
+                        group_var = "bed",
+                        time_unit = "1 hour",
+                        results =  "total",
+                        uniques = TRUE))
 #
 #
 # test_that("grouped results with no group_var throws error", {
