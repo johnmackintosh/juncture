@@ -2,7 +2,7 @@
 % Please edit documentation in R/juncture.R
 \name{juncture}
 \alias{juncture}
-\title{Count the number of resourcess by interval}
+\title{Count the number of resources by interval}
 \usage{
 juncture(
   df,
@@ -75,9 +75,8 @@ Also included are the start and end of the interval, plus the date and
 base hour for convenient interactive filtering of the results.
 }
 \description{
-Counts the number of resourcess in each location, by the specified interval,
-for the duration of the resources admission. Results can be returned as a
-grand totals, grouped totals, or individual resources level per interval.
+Counts the number of resources in each location, by the specified interval, for the duration of the resources admission.
+Results can be returned as grand totals, grouped totals, or at individual resource level per interval.
 }
 \examples{
 \donttest{

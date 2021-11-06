@@ -1,8 +1,7 @@
-#' Count the number of resourcess by interval
+#' Count the number of resources by interval
 #'
-#' Counts the number of resourcess in each location, by the specified interval,
-#' for the duration of the resources admission. Results can be returned as a
-#' grand totals, grouped totals, or individual resources level per interval.
+#' Counts the number of resources in each location, by the specified interval, for the duration of the resources admission.
+#' Results can be returned as grand totals, grouped totals, or at individual resource level per interval.
 #'
 #' @param df dataframe, tibble or data.table.
 #' @param identifier Unique row / resource/ person identifier.
