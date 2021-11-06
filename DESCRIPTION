@@ -14,7 +14,9 @@ Imports:
     checkmate,
     data.table,
     lubridate
-Suggests: tinytest
+Suggests: 
+    covr,
+    tinytest
 URL: https://github.com/johnmackintosh/juncture
 BugReports: https://github.com/johnmackintosh/juncture/issues
 Depends: 
