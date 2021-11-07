@@ -42,29 +42,23 @@ If you have time in, time out, a unique identifier, and optionally, a grouping v
 remotes::install_github("johnmackintosh/juncture")
 ```
 
-## Example
+## The problem
 
-Obtain data for individual patients, by hour, for each hour of their stay.  
-Note we are restricting the outputs to keep this readable
+The built-in dataset, ```beds``` shows the problem. We need a way to count the number of patients in the hospital, either by bed, or on an individual basis, by any time interval.
 
-```{r example_patient, echo=TRUE}
+```{r check-dataset, echo=TRUE}
 library(juncture)
-patient_count <- juncture(beds, 
-identifier = 'patient',
-time_in = 'start_time', 
-time_out = 'end_time', 
-group_var = 'bed', 
-time_unit = '1 hour', 
-results = "individual", 
-uniques = TRUE)
-
-head(patient_count)
-
+beds
 ```
 
 
+## Summary by hour
 
-To obtain summary data for every hour, for all combined patient stays:
+To obtain summary data for every hour, for all combined patient stays, we set ```results``` to ```totals```.  
+
+The base date and base hour for each interval are supplied to enable easier filtering of the results.  
+
+Here the output is restricted to ```2020-01-01``` using the generated ```base_date``` column:  
 
 ```{r example_hour, echo=TRUE}
 library(juncture)
@@ -77,19 +71,15 @@ time_unit = '1 hour',
 results = "total", 
 uniques = TRUE)
 
-head(patient_count_hour)
+patient_count_hour[base_date == '2020-01-01']
 ```
 
-Note that you also receive the base date and base hour for each 
-interval to enable easier filtering of the results.
 
-
-## Grouped values
+## Grouping by bed and hour
 
 This example shows grouping results by bed and hour.  
-The first ten rows of the resulting grouped values are shown
 
-```{r grouped}
+```{r grouped, echo=TRUE}
 library(juncture)
 grouped <- juncture(beds, 
 identifier = 'patient',
@@ -100,8 +90,36 @@ time_unit = '1 hour',
 results = "group", 
 uniques = FALSE)
 
-head(grouped[bed %chin% c('A', 'B')],10)
+ # order the output by the  bed and start time: 
+grouped[bed %chin% c('B', 'C')][,.(bed, base_date, base_hour, N)][order(bed,base_date, base_hour)][]
 ```
+
+
+## Individual Level results
+
+Use this option to enable further aggregation or analysis within R or other analytic tools.
+The output contains 1 row per individual/ resource, per interval, for each interval within the respective date range.
+
+```{r individual, echo = TRUE}
+library(juncture)
+patient_count_hour <- juncture(beds, 
+identifier = 'patient',
+time_in = 'start_time', 
+time_out = 'end_time', 
+group_var = 'bed', 
+time_unit = '1 hour', 
+results = "individual", 
+uniques = TRUE)
+
+head(patient_count_hour,10)
+
+patient_count_hour[patient == 5,]
+```
+
+
+
+
+
 
 
 ## General Help

@@ -36,41 +36,38 @@ were ‘IN’ / ‘OPEN’ at any time, at whatever granularity you need.
 remotes::install_github("johnmackintosh/juncture")
 ```
 
-## Example
+## The problem
 
-Obtain data for individual patients, by hour, for each hour of their
-stay.  
-Note we are restricting the outputs to keep this readable
+The built-in dataset, `beds` shows the problem. We need a way to count
+the number of patients in the hospital, either by bed, or on an
+individual basis, by any time interval.
 
 ``` r
 library(juncture)
-patient_count <- juncture(beds, 
-identifier = 'patient',
-time_in = 'start_time', 
-time_out = 'end_time', 
-group_var = 'bed', 
-time_unit = '1 hour', 
-results = "individual", 
-uniques = TRUE)
-
-head(patient_count)
-#>    bed patient          start_time            end_time  interval_beginning
-#> 1:   A       1 2020-01-01 09:34:00 2020-01-01 10:34:00 2020-01-01 09:00:00
-#> 2:   B       5 2020-01-01 09:45:00 2020-01-01 14:45:00 2020-01-01 09:00:00
-#> 3:   A       1 2020-01-01 09:34:00 2020-01-01 10:34:00 2020-01-01 10:00:00
-#> 4:   B       5 2020-01-01 09:45:00 2020-01-01 14:45:00 2020-01-01 10:00:00
-#> 5:   C       9 2020-01-01 10:05:00 2020-01-01 10:35:00 2020-01-01 10:00:00
-#> 6:   A       2 2020-01-01 10:55:00 2020-01-01 11:15:24 2020-01-01 10:00:00
-#>           interval_end  base_date base_hour
-#> 1: 2020-01-01 10:00:00 2020-01-01         9
-#> 2: 2020-01-01 10:00:00 2020-01-01         9
-#> 3: 2020-01-01 11:00:00 2020-01-01        10
-#> 4: 2020-01-01 11:00:00 2020-01-01        10
-#> 5: 2020-01-01 11:00:00 2020-01-01        10
-#> 6: 2020-01-01 11:00:00 2020-01-01        10
+beds
+#>    bed patient          start_time            end_time
+#> 1    A       1 2020-01-01 09:34:00 2020-01-01 10:34:00
+#> 2    A       2 2020-01-01 10:55:00 2020-01-01 11:15:24
+#> 3    A       3 2020-01-01 11:34:00 2020-01-02 17:34:00
+#> 4    A       4 2020-01-01 18:00:00 2020-01-03 00:00:00
+#> 5    B       5 2020-01-01 09:45:00 2020-01-01 14:45:00
+#> 6    B       6 2020-01-01 16:13:00 2020-01-01 21:27:24
+#> 7    B       7 2020-01-01 21:41:48 2020-01-01 22:56:12
+#> 8    B       8 2020-01-01 23:13:00 2020-01-02 00:43:00
+#> 9    C       9 2020-01-01 10:05:00 2020-01-01 10:35:00
+#> 10   D      10 2020-01-01 10:30:00                <NA>
 ```
 
-To obtain summary data for every hour, for all combined patient stays:
+## Summary by hour
+
+To obtain summary data for every hour, for all combined patient stays,
+we set `results` to `totals`.
+
+The base date and base hour for each interval are supplied to enable
+easier filtering of the results.
+
+Here the output is restricted to `2020-01-01` using the generated
+`base_date` column:
 
 ``` r
 library(juncture)
@@ -83,23 +80,28 @@ time_unit = '1 hour',
 results = "total", 
 uniques = TRUE)
 
-head(patient_count_hour)
-#>     interval_beginning        interval_end  base_date base_hour N
-#> 1: 2020-01-01 09:00:00 2020-01-01 10:00:00 2020-01-01         9 2
-#> 2: 2020-01-01 10:00:00 2020-01-01 11:00:00 2020-01-01        10 5
-#> 3: 2020-01-01 11:00:00 2020-01-01 12:00:00 2020-01-01        11 4
-#> 4: 2020-01-01 12:00:00 2020-01-01 13:00:00 2020-01-01        12 3
-#> 5: 2020-01-01 13:00:00 2020-01-01 14:00:00 2020-01-01        13 3
-#> 6: 2020-01-01 14:00:00 2020-01-01 15:00:00 2020-01-01        14 3
+patient_count_hour[base_date == '2020-01-01']
+#>      interval_beginning        interval_end  base_date base_hour N
+#>  1: 2020-01-01 09:00:00 2020-01-01 10:00:00 2020-01-01         9 2
+#>  2: 2020-01-01 10:00:00 2020-01-01 11:00:00 2020-01-01        10 5
+#>  3: 2020-01-01 11:00:00 2020-01-01 12:00:00 2020-01-01        11 4
+#>  4: 2020-01-01 12:00:00 2020-01-01 13:00:00 2020-01-01        12 3
+#>  5: 2020-01-01 13:00:00 2020-01-01 14:00:00 2020-01-01        13 3
+#>  6: 2020-01-01 14:00:00 2020-01-01 15:00:00 2020-01-01        14 3
+#>  7: 2020-01-01 15:00:00 2020-01-01 16:00:00 2020-01-01        15 2
+#>  8: 2020-01-01 16:00:00 2020-01-01 17:00:00 2020-01-01        16 3
+#>  9: 2020-01-01 17:00:00 2020-01-01 18:00:00 2020-01-01        17 3
+#> 10: 2020-01-01 18:00:00 2020-01-01 19:00:00 2020-01-01        18 4
+#> 11: 2020-01-01 19:00:00 2020-01-01 20:00:00 2020-01-01        19 4
+#> 12: 2020-01-01 20:00:00 2020-01-01 21:00:00 2020-01-01        20 4
+#> 13: 2020-01-01 21:00:00 2020-01-01 22:00:00 2020-01-01        21 5
+#> 14: 2020-01-01 22:00:00 2020-01-01 23:00:00 2020-01-01        22 4
+#> 15: 2020-01-01 23:00:00 2020-01-02 00:00:00 2020-01-01        23 4
 ```
 
-Note that you also receive the base date and base hour for each interval
-to enable easier filtering of the results.
+## Grouping by bed and hour
 
-## Grouped values
-
-This example shows grouping results by bed and hour.  
-The first ten rows of the resulting grouped values are shown
+This example shows grouping results by bed and hour.
 
 ``` r
 library(juncture)
@@ -112,18 +114,84 @@ time_unit = '1 hour',
 results = "group", 
 uniques = FALSE)
 
-head(grouped[bed %chin% c('A', 'B')],10)
-#>     bed  interval_beginning        interval_end  base_date base_hour N
-#>  1:   A 2020-01-01 09:00:00 2020-01-01 10:00:00 2020-01-01         9 1
-#>  2:   B 2020-01-01 09:00:00 2020-01-01 10:00:00 2020-01-01         9 1
-#>  3:   A 2020-01-01 10:00:00 2020-01-01 11:00:00 2020-01-01        10 2
-#>  4:   B 2020-01-01 10:00:00 2020-01-01 11:00:00 2020-01-01        10 1
-#>  5:   B 2020-01-01 11:00:00 2020-01-01 12:00:00 2020-01-01        11 1
-#>  6:   A 2020-01-01 11:00:00 2020-01-01 12:00:00 2020-01-01        11 2
-#>  7:   B 2020-01-01 12:00:00 2020-01-01 13:00:00 2020-01-01        12 1
-#>  8:   A 2020-01-01 12:00:00 2020-01-01 13:00:00 2020-01-01        12 1
-#>  9:   B 2020-01-01 13:00:00 2020-01-01 14:00:00 2020-01-01        13 1
-#> 10:   A 2020-01-01 13:00:00 2020-01-01 14:00:00 2020-01-01        13 1
+ # order the output by the  bed and start time: 
+grouped[bed %chin% c('B', 'C')][,.(bed, base_date, base_hour, N)][order(bed,base_date, base_hour)][]
+#>     bed  base_date base_hour N
+#>  1:   B 2020-01-01         9 1
+#>  2:   B 2020-01-01        10 1
+#>  3:   B 2020-01-01        11 1
+#>  4:   B 2020-01-01        12 1
+#>  5:   B 2020-01-01        13 1
+#>  6:   B 2020-01-01        14 1
+#>  7:   B 2020-01-01        16 1
+#>  8:   B 2020-01-01        17 1
+#>  9:   B 2020-01-01        18 1
+#> 10:   B 2020-01-01        19 1
+#> 11:   B 2020-01-01        20 1
+#> 12:   B 2020-01-01        21 2
+#> 13:   B 2020-01-01        22 1
+#> 14:   B 2020-01-01        23 1
+#> 15:   B 2020-01-02         0 1
+#> 16:   C 2020-01-01        10 1
+```
+
+## Individual Level results
+
+Use this option to enable further aggregation or analysis within R or
+other analytic tools. The output contains 1 row per individual/
+resource, per interval, for each interval within the respective date
+range.
+
+``` r
+library(juncture)
+patient_count_hour <- juncture(beds, 
+identifier = 'patient',
+time_in = 'start_time', 
+time_out = 'end_time', 
+group_var = 'bed', 
+time_unit = '1 hour', 
+results = "individual", 
+uniques = TRUE)
+
+head(patient_count_hour,10)
+#>     bed patient          start_time            end_time  interval_beginning
+#>  1:   A       1 2020-01-01 09:34:00 2020-01-01 10:34:00 2020-01-01 09:00:00
+#>  2:   B       5 2020-01-01 09:45:00 2020-01-01 14:45:00 2020-01-01 09:00:00
+#>  3:   A       1 2020-01-01 09:34:00 2020-01-01 10:34:00 2020-01-01 10:00:00
+#>  4:   B       5 2020-01-01 09:45:00 2020-01-01 14:45:00 2020-01-01 10:00:00
+#>  5:   C       9 2020-01-01 10:05:00 2020-01-01 10:35:00 2020-01-01 10:00:00
+#>  6:   A       2 2020-01-01 10:55:00 2020-01-01 11:15:24 2020-01-01 10:00:00
+#>  7:   D      10 2020-01-01 10:30:00 2020-01-03 00:00:00 2020-01-01 10:00:00
+#>  8:   B       5 2020-01-01 09:45:00 2020-01-01 14:45:00 2020-01-01 11:00:00
+#>  9:   A       2 2020-01-01 10:55:00 2020-01-01 11:15:24 2020-01-01 11:00:00
+#> 10:   D      10 2020-01-01 10:30:00 2020-01-03 00:00:00 2020-01-01 11:00:00
+#>            interval_end  base_date base_hour
+#>  1: 2020-01-01 10:00:00 2020-01-01         9
+#>  2: 2020-01-01 10:00:00 2020-01-01         9
+#>  3: 2020-01-01 11:00:00 2020-01-01        10
+#>  4: 2020-01-01 11:00:00 2020-01-01        10
+#>  5: 2020-01-01 11:00:00 2020-01-01        10
+#>  6: 2020-01-01 11:00:00 2020-01-01        10
+#>  7: 2020-01-01 11:00:00 2020-01-01        10
+#>  8: 2020-01-01 12:00:00 2020-01-01        11
+#>  9: 2020-01-01 12:00:00 2020-01-01        11
+#> 10: 2020-01-01 12:00:00 2020-01-01        11
+
+patient_count_hour[patient == 5,]
+#>    bed patient          start_time            end_time  interval_beginning
+#> 1:   B       5 2020-01-01 09:45:00 2020-01-01 14:45:00 2020-01-01 09:00:00
+#> 2:   B       5 2020-01-01 09:45:00 2020-01-01 14:45:00 2020-01-01 10:00:00
+#> 3:   B       5 2020-01-01 09:45:00 2020-01-01 14:45:00 2020-01-01 11:00:00
+#> 4:   B       5 2020-01-01 09:45:00 2020-01-01 14:45:00 2020-01-01 12:00:00
+#> 5:   B       5 2020-01-01 09:45:00 2020-01-01 14:45:00 2020-01-01 13:00:00
+#> 6:   B       5 2020-01-01 09:45:00 2020-01-01 14:45:00 2020-01-01 14:00:00
+#>           interval_end  base_date base_hour
+#> 1: 2020-01-01 10:00:00 2020-01-01         9
+#> 2: 2020-01-01 11:00:00 2020-01-01        10
+#> 3: 2020-01-01 12:00:00 2020-01-01        11
+#> 4: 2020-01-01 13:00:00 2020-01-01        12
+#> 5: 2020-01-01 14:00:00 2020-01-01        13
+#> 6: 2020-01-01 15:00:00 2020-01-01        14
 ```
 
 ## General Help
