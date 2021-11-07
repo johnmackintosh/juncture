@@ -1,11 +1,14 @@
 Package: juncture
 Type: Package
-Title: Creates Census Tables Quickly
+Title: Fast Census Tables For Point In Time Reporting
 Version: 0.1.0
 Author: John MacKintosh
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Maintainer: John MacKintosh <johnmackintosh.jm@gmail.com>
+Description: Fast, flexible census tables without 'SQL'.
+    Count individuals or resources as they move or change status, at each
+    interval within a specified date range. For example, count the number of
+    patients in hospital accounting for moves between departments, or determine
+    the number of occupants in a hotel between 2 dates.
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true

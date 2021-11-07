@@ -14,7 +14,7 @@ The goal of juncture is to create census tables of people or resources
 by period, given a start and end date, without reliance on access to a
 database or writing SQL.
 
-Consider the scenario where you need to know how man patients were ‘IN’
+Consider the scenario where you need to know how many patients were ‘IN’
 hospital. Some typical questions might be:  
 - How many patients were in the hospital at 10 AM yesterday?  
 - How many were in during each 15 minute spell between 2pm and 6pm?  
