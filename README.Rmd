@@ -190,3 +190,30 @@ head(patient_count_time_adjust)
 Valid values for time_adjust_period are 'start_min', 'start_sec', 'end_min' and 'end_sec'
 
 
+## The hotel problem
+How many patients are 'IN' the hotel each day
+
+```{r hotel, echo  = TRUE}
+
+check_in_date <- c('2010-01-01', '2010-01-02' ,'2010-01-01', '2010-01-08', 
+                   '2010-01-08', '2010-01-15', '2010-01-15', '2010-01-16', '2010-01-19', '2010-01-22')
+check_out_date <- c('2010-01-07', '2010-01-04' ,'2010-01-09', '2010-01-21', 
+                    '2010-01-11', '2010-01-22', NA, '2010-01-20', '2010-01-25', '2010-01-29')
+Person = c("John", "Smith", "Alex", "Peter", "Will", "Matt", "Tim", "Kevin", "Tom", "Adam")
+
+checkin <- as.POSIXct(as.Date(check_in_date))
+checkout <- as.POSIXct(as.Date(check_out_date))
+hotel <- data.frame(checkin, checkout, Person)
+
+hotel_occupancy <- juncture(hotel, 
+         identifier = "Person",
+         time_in = "checkin",
+         time_out  = "checkout", 
+         time_unit = '1 day',
+         results = 'total')
+
+# just show the dates and number 'IN'
+hotel_occupancy[,.(base_date, N)]
+```
+
+

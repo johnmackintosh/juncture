@@ -16,6 +16,19 @@ expect_error(juncture(df = beds,
                       results = c('total','individual'),
                       uniques = FALSE))
 
+# grp throws error
+
+expect_error(juncture(df = beds,
+                      identifier = "pat_id",
+                      time_in = "admit_date",
+                      time_out = "discharge_date",
+                      group_var = "location",
+                      time_unit = "1 hour",
+                      results = 'grp',
+                      uniques = FALSE))
+
+
+
 
 # missing df argument causes error",
 expect_error(juncture(df = NULL,
@@ -514,4 +527,19 @@ expect_equivalent(test_res3, checkDT3)
 
 
 
+curr_time <- lubridate::ceiling_date(Sys.time(), '1 hour')
+if (lubridate::hour(curr_time) == 0) {
+    curr_time <- curr_time + lubridate::hours(1)
+    }
+curr_time <- lubridate::ymd_hms(curr_time)
 
+max_adm_date <- as.POSIXct('2021-11-02 15:34:00')
+max_dis_date <-  as.POSIXct('2021-11-01 15:34:00')
+
+maxdate <- if (max_adm_date > max_dis_date) {
+  maxdate <- curr_time
+  } else {
+    maxdate <- max_dis_date
+    }
+
+expect_equivalent(maxdate,curr_time)

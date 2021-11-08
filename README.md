@@ -276,3 +276,59 @@ head(patient_count_time_adjust)
 
 Valid values for time\_adjust\_period are ‘start\_min’, ‘start\_sec’,
 ‘end\_min’ and ‘end\_sec’
+
+## The hotel problem
+
+How many patients are ‘IN’ the hotel each day
+
+``` r
+check_in_date <- c('2010-01-01', '2010-01-02' ,'2010-01-01', '2010-01-08', 
+                   '2010-01-08', '2010-01-15', '2010-01-15', '2010-01-16', '2010-01-19', '2010-01-22')
+check_out_date <- c('2010-01-07', '2010-01-04' ,'2010-01-09', '2010-01-21', 
+                    '2010-01-11', '2010-01-22', NA, '2010-01-20', '2010-01-25', '2010-01-29')
+Person = c("John", "Smith", "Alex", "Peter", "Will", "Matt", "Tim", "Kevin", "Tom", "Adam")
+
+checkin <- as.POSIXct(as.Date(check_in_date))
+checkout <- as.POSIXct(as.Date(check_out_date))
+hotel <- data.frame(checkin, checkout, Person)
+
+hotel_occupancy <- juncture(hotel, 
+         identifier = "Person",
+         time_in = "checkin",
+         time_out  = "checkout", 
+         time_unit = '1 day',
+         results = 'total')
+
+# just show the dates and number 'IN'
+hotel_occupancy[,.(base_date, N)]
+#>      base_date N
+#>  1: 2010-01-01 2
+#>  2: 2010-01-02 3
+#>  3: 2010-01-03 3
+#>  4: 2010-01-04 2
+#>  5: 2010-01-05 2
+#>  6: 2010-01-06 2
+#>  7: 2010-01-07 1
+#>  8: 2010-01-08 3
+#>  9: 2010-01-09 2
+#> 10: 2010-01-10 2
+#> 11: 2010-01-11 1
+#> 12: 2010-01-12 1
+#> 13: 2010-01-13 1
+#> 14: 2010-01-14 1
+#> 15: 2010-01-15 3
+#> 16: 2010-01-16 4
+#> 17: 2010-01-17 4
+#> 18: 2010-01-18 4
+#> 19: 2010-01-19 5
+#> 20: 2010-01-20 4
+#> 21: 2010-01-21 3
+#> 22: 2010-01-22 3
+#> 23: 2010-01-23 3
+#> 24: 2010-01-24 3
+#> 25: 2010-01-25 2
+#> 26: 2010-01-26 2
+#> 27: 2010-01-27 2
+#> 28: 2010-01-28 2
+#>      base_date N
+```
