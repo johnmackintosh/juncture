@@ -1,6 +1,6 @@
 Package: juncture
 Type: Package
-Title: Fast Census Tables For Point In Time Reporting
+Title: Fast Census Tables for Point in Time Reporting
 Version: 0.1.0
 Author: John MacKintosh
 Maintainer: John MacKintosh <johnmackintosh.jm@gmail.com>
