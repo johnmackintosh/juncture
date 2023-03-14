@@ -6,8 +6,7 @@
 <!-- badges: start -->
 
 [![R-CMD-check](https://github.com/johnmackintosh/juncture/workflows/R-CMD-check/badge.svg)](https://github.com/johnmackintosh/juncture/actions)
-[![Codecov test
-coverage](https://codecov.io/gh/johnmackintosh/juncture/branch/master/graph/badge.svg)](https://app.codecov.io/gh/johnmackintosh/juncture?branch=master)
+[![codecov](https://codecov.io/gh/johnmackintosh/juncture/branch/main/graph/badge.svg?token=W2QEK4BLKC)](https://codecov.io/gh/johnmackintosh/juncture)
 <!-- badges: end -->
 
 The goal of juncture is to create census tables of people or resources
